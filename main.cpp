@@ -8,8 +8,6 @@
 
 using matrix_storage = std::vector<std::tuple<int, int, int>> ;
 
-
-
 template <typename T, T default_value>
 class Matrix
 {
