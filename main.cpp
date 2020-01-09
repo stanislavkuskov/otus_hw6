@@ -23,8 +23,8 @@ private:
             } else {
                 if (find_element(h, w) != default_value){
 //                    TODO найти элемент и удалить его из контейнера (наверное нужно заменить вектор на что то другое)
-
-                    m_container.emplace_back(h, w, val);
+                    int pos = find_position(h, w);
+                    m_container.erase(m_container.begin() + pos);
                 }
             }
 
@@ -37,6 +37,17 @@ private:
             }
             return default_value;
         };
+        int find_position(int h, int w){
+            int i = 0;
+            for (std::tuple<int, int, int> element : m_container){
+                if ((std::get<0>(element) == h) and (std::get<1>(element) == w)){
+                    return i;
+                }
+                ++i;
+            }
+            return -1;
+        };
+
         size_t get_container_size(){
             return m_container.size();
         }
@@ -94,6 +105,21 @@ int main(int, char *[])
 //    for (int i = 0; i <= N; ++i){
 //        m.set_element(i, i, default_value);
 //    }
+    for (int i = 0; i <= N; ++i){
+        for (int j = 0; j <= N; ++j){
+            if (i%2 == 0){
+                if (j%2 == 0){
+                    m.set_element(i, j, default_value);
+//                    std::cout << i << ":" << j << std::endl;
+                }
+            } else{
+                if (j%2 != 0){
+                    m.set_element(i, j, default_value);
+//                    std::cout << i << ":" << j << std::endl;
+                }
+            }
+        }
+    }
 
     /*  3. Необходимо вывести фрагмент матрицы от [1,1] до [8,8]. Между столбцами пробел.
      * Каждая строка матрицы на новой строке.
