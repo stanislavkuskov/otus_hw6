@@ -6,7 +6,7 @@
 #include <iostream>
 #include <map>
 
-using matrix_storage = std::vector<std::tuple<int, int, int>> ;
+using matrix_storage = std::map<std::pair<int, int>, int> ;
 
 template <typename T, T default_value>
 class Matrix
@@ -17,36 +17,22 @@ private:
         void append_element(int h, int w, int val){
 //          Проверяем val на значение по умолчанию
             if (val != default_value){
-                if (find_element(h, w) == default_value){
-                    m_container.emplace_back(h, w, val);
-                }
+                m_container.insert({{h, w}, val});
             } else {
-                if (find_element(h, w) != default_value){
-//                    TODO найти элемент и удалить его из контейнера (наверное нужно заменить вектор на что то другое)
-                    int pos = find_position(h, w);
-                    m_container.erase(m_container.begin() + pos);
+                if (m_container.count({h, w}) > 0){
+                    m_container.erase({h, w});
                 }
             }
 
         };
-        int find_element(int h, int w){
-            for (std::tuple<int, int, int> element : m_container){
-                if ((std::get<0>(element) == h) and (std::get<1>(element) == w)){
-                    return std::get<2>(element);
-                }
+
+        int get_value(int h, int w){
+            T res = default_value;
+            if (m_container.count({h, w}) > 0){
+                res = m_container.find({h, w}) -> second;
             }
-            return default_value;
-        };
-        int find_position(int h, int w){
-            int i = 0;
-            for (std::tuple<int, int, int> element : m_container){
-                if ((std::get<0>(element) == h) and (std::get<1>(element) == w)){
-                    return i;
-                }
-                ++i;
-            }
-            return -1;
-        };
+            return res;
+        }
 
         size_t get_container_size(){
             return m_container.size();
@@ -61,8 +47,8 @@ public:
         return m.get_container_size();
     }
 
-    int get_element(int w, int h){
-        return m.find_element(h, w);
+    int get_element(int h, int w){
+        return m.get_value(h, w);
     }
 
     void set_element(int h, int w, int val){
@@ -101,21 +87,15 @@ int main(int, char *[])
     /*  2. Начиная с ячейки [0, 0] в шахматном порядке заполнить матрицу 10x10
      * значением по умолчанию.
      */
-//        ПРОВЕРКА НА ЗНАЧЕНИЯ ПО УМОЛЧАНИЮ
-//    for (int i = 0; i <= N; ++i){
-//        m.set_element(i, i, default_value);
-//    }
     for (int i = 0; i <= N; ++i){
         for (int j = 0; j <= N; ++j){
             if (i%2 == 0){
                 if (j%2 == 0){
                     m.set_element(i, j, default_value);
-//                    std::cout << i << ":" << j << std::endl;
                 }
             } else{
                 if (j%2 != 0){
                     m.set_element(i, j, default_value);
-//                    std::cout << i << ":" << j << std::endl;
                 }
             }
         }
@@ -127,6 +107,7 @@ int main(int, char *[])
 // вывод элементов по списку, отображение 0 на пустых местах. Для этго нужен упорядоченный список
     for (int i = 1; i <= 8; ++i){
         for (int j = 1; j <= 8; ++j){
+            std::cout << m.get_element(i, j) << " ";
 
         }
         std::cout << std::endl;
