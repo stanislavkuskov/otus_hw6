@@ -12,7 +12,6 @@ private:
     struct MatrixContainer {
         matrix_storage m_container;
         void append_element(int h, int w, T val){
-//          Проверяем val на значение по умолчанию
             if (val != default_value){
                 m_container.insert({{h, w}, val});
             } else {
@@ -34,15 +33,14 @@ private:
         size_t get_container_size(){
             return m_container.size();
         }
+
         void print_container(){
             for (auto element: m_container){
                 std::cout << "value: " << element.second
                 << ", h: " << element.first.first << ", w: "
                 << element.first.second << std::endl;
             }
-
         }
-
     };
 
     MatrixContainer m;
@@ -60,6 +58,7 @@ public:
     void set_element(int h, int w, T val){
         m.append_element(h, w, val);
     }
+
     void print(){
         m.print_container();
     }
@@ -85,7 +84,6 @@ int main(int, char *[])
      * выражением m[i][i] = m[N - 1 - i][i] = i; // N = 10, i = (0 .. N)
     */
 
-//    DONE
     int N = 10;
 
     for (int i = 0; i < N; ++i){
